@@ -1,0 +1,7 @@
+url:   ip:8000/tv
+
+注册：register
+
+天气更新事件:  weather
+
+即时插播事件 in_play

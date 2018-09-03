@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">XiaoXi_TV</string>
+    <string name="app_name">小玺TV</string>
+    <!--<string name="app_name">TV</string>-->
+    <string name="Download">应用下载</string>
+    <string name="Downloading">正在拼命下载中,请稍后....</string>
+    <string name="Background">后台下载</string>
+    <string name="Complete">下载成功</string>
+    <string name="DownFailed">下载失败</string>
+    <string name="Ok">确\t定</string>
+    <string name="Cancle">取\t消</string>
+    <string name="Error">服务器维护中...</string>
+    <string name="update">系统更新中检测到系统需要更新</string>
+    <string name="updateing">正在拼命更新中，请稍后</string>
 </resources>

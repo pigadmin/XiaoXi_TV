@@ -1,0 +1,60 @@
+系统授权验证（终端每天一次请求 ）
+
+注：200代表授权正常  400代表授权失败（具体信息看msg）
+http://localhost:8081/tv/remote/checkAuth
+
+返回数据
+      用户信息
+      wifi : Wi-Fi状态
+-------------------------------------------------------------------
+滚动字幕
+参数：mac
+
+返回 List<Subtitle> titles
+http://localhost:8080/tv/remote/getSubTitle?mac=3331
+
+-------------------------------------------------------------------
+广告
+参数：mac
+     adType : 1.开机广告  2.唤醒广告  3.休眠广告
+返回 List<WelcomeAd> ads
+http://localhost:8080/tv/remote/getWelComeAd?mac=3331&adType=1
+-------------------------------------------------------------------
+获取背景图片，logo+背景音乐
+参数 ：mac
+
+返回  UIVO   Back.type = 1 图片   2 音频
+http://localhost:8080/tv/remote/getLogo?mac=3331&type=3
+----------------------------------------------------------------------
+查看升级
+
+参数 ：mac
+    version   double
+
+    返回：有升级时返回url地址
+http://localhost:8080/tv/remote/getUpgrade?mac=3331&version=0.1
+-------------------------------------------------------------------
+汇报升级
+参数 ：mac
+    version   double
+
+    返回：有升级时返回url地址
+http://localhost:8080/tv/remote/setUpgrade?mac=3331&version=0.1
+-------------------------------------------------------------------
+获取天气
+
+//http://localhost:8080/tv/remote/getWeather
+
+已改为 socketio 事件名称   weather
+
+-------------------------------------------------------------------
+
+获取计划插播
+
+http://localhost:8080/tv/remote/msgins
+
+当前时间一条插播
+
+资源地址在 surl 字段
+
+-------------------------------------------------------------------
