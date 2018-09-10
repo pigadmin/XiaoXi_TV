@@ -88,9 +88,20 @@ public class Gameadapter extends RecyclerView.Adapter<Gameadapter.ViewHolder> im
             holder.game_name.setText(position + "." + menus.get(position).getName());
 //            holder.game_name.setText(position + "");
 
+
+//            StaggeredGridLayoutManager.LayoutParams lp = new StaggeredGridLayoutManager.LayoutParams(230, StaggeredGridLayoutManager.LayoutParams.MATCH_PARENT);
+//            holder.menu_linearlayout.setLayoutParams(lp);
+
+            if (position == 0) {
+                StaggeredGridLayoutManager.LayoutParams lp = new StaggeredGridLayoutManager.LayoutParams(400, StaggeredGridLayoutManager.LayoutParams.MATCH_PARENT);
+                lp.setMargins(0, 0, 30, 30);
+                holder.menu_linearlayout.setLayoutParams(lp);
+            } else {
+                StaggeredGridLayoutManager.LayoutParams lp = new StaggeredGridLayoutManager.LayoutParams(200, StaggeredGridLayoutManager.LayoutParams.MATCH_PARENT);
+                lp.setMargins(0, 0, 30, 30);
+                holder.menu_linearlayout.setLayoutParams(lp);
+            }
             Picasso.with(context).load(menus.get(position).getIcon()).into(holder.game_bg);
-            StaggeredGridLayoutManager.LayoutParams lp = new StaggeredGridLayoutManager.LayoutParams(230, StaggeredGridLayoutManager.LayoutParams.MATCH_PARENT);
-            holder.menu_linearlayout.setLayoutParams(lp);
         } catch (Exception e) {
             e.printStackTrace();
         }

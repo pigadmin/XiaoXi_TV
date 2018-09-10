@@ -8,7 +8,7 @@ public class LtoDate {
 	static SimpleDateFormat yMd = new SimpleDateFormat("yyyy/MM/dd");
 	static SimpleDateFormat Hm = new SimpleDateFormat("HH:mm");
 	static SimpleDateFormat Md = new SimpleDateFormat("MM/dd");
-	static SimpleDateFormat E = new SimpleDateFormat("E");
+		static SimpleDateFormat E = new SimpleDateFormat("EEEE");
 
 	static SimpleDateFormat HMmd= new SimpleDateFormat("HH:mm MM/dd");
 	static SimpleDateFormat yMdHmE = new SimpleDateFormat(

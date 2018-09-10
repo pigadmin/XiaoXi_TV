@@ -131,16 +131,16 @@ public class TextSurfaceView extends SurfaceView implements Callback, Runnable {
                 Rect bounds = new Rect();
                 paint.getTextBounds(content, 0, content.length(), bounds);
                 Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
-//                int baseline = (getMeasuredHeight() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top;
-                canvas.drawText(content, x, 0, paint);
+                int baseline = (getMeasuredHeight() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top;
+                canvas.drawText(content, x, baseline, paint);
                 Resources res = getResources();
 //                Bitmap bmp = BitmapFactory.decodeResource(res, R.mipmap.ic_launcher);
-                Log.e("----", x + "");
+//                Log.e("----", x + "");
 
-                if (test != null) {
-                    Log.e("----", x + test.getWidth() + "");
-                    canvas.drawBitmap(test, x + test.getWidth(), 0, paint);
-                }
+//                if (test != null) {
+//                    Log.e("----", x + test.getWidth() + "");
+//                    canvas.drawBitmap(test, x + test.getWidth(), 0, paint);
+//                }
 
 
                 mSurfaceHolder.unlockCanvasAndPost(canvas);

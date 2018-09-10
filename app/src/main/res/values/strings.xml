@@ -8,7 +8,9 @@
     <string name="DownFailed">下载失败</string>
     <string name="Ok">确\t定</string>
     <string name="Cancle">取\t消</string>
+    <string name="NetWorkError">网络异常...</string>
     <string name="Error">服务器维护中...</string>
     <string name="update">系统更新中检测到系统需要更新</string>
     <string name="updateing">正在拼命更新中，请稍后</string>
+    <string name="stopapp">应用已被禁用</string>
 </resources>

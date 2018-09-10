@@ -3,13 +3,14 @@ package xiaoxi.tv.tools;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import java.lang.reflect.Method;
 
 public class Ap {
 
 
-    private final String TAG = "WifiHostBiz";
+    private final String TAG = "Ap";
     private WifiManager wifiManager;
     private String WIFI_HOST_SSID = "XiaoXiTV";
     private String WIFI_HOST_PRESHARED_KEY = "88888888";// 密码必须大于8位数
@@ -79,6 +80,42 @@ public class Ap {
             return (Boolean) method.invoke(wifiManager, apConfig, enabled);
         } catch (Exception e) {
             return false;
+        }
+    }
+
+
+    public void startWifiAp() {
+        if (wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(false);
+        }
+
+        Method method = null;
+        try {
+            method = wifiManager.getClass().getMethod("setWifiApEnabled",
+                    WifiConfiguration.class, boolean.class);
+            method.setAccessible(true);
+            WifiConfiguration netConfig = new WifiConfiguration();
+            netConfig.SSID = "tv";
+            netConfig.preSharedKey = "88888888";
+            netConfig.allowedAuthAlgorithms
+                    .set(WifiConfiguration.AuthAlgorithm.OPEN);
+            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            netConfig.allowedKeyManagement
+                    .set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            netConfig.allowedPairwiseCiphers
+                    .set(WifiConfiguration.PairwiseCipher.CCMP);
+            netConfig.allowedPairwiseCiphers
+                    .set(WifiConfiguration.PairwiseCipher.TKIP);
+            netConfig.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.CCMP);
+            netConfig.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.TKIP);
+
+            method.invoke(wifiManager, netConfig, true);
+
+        } catch (Exception e) {
+            Log.i(TAG, "startWifiAp: " + e.getMessage());
         }
     }
 }

@@ -18,7 +18,7 @@ public class MarqueeToast {
     private Context context;
     View mView;
     int defaultw = 1280;
-    int defaulth = 39;
+    int defaulth = 40;
 
     public MarqueeToast(Context context) {
         this.context = context;
@@ -29,8 +29,12 @@ public class MarqueeToast {
         params.height = defaulth;
         params.width = defaultw;
 
-        params.type = LayoutParams.TYPE_SYSTEM_ALERT
-                | LayoutParams.TYPE_SYSTEM_OVERLAY;
+//        params.type = LayoutParams.TYPE_SYSTEM_ALERT
+////                | LayoutParams.TYPE_SYSTEM_OVERLAY;
+
+        params.type = LayoutParams.TYPE_SYSTEM_ALERT | LayoutParams.TYPE_SYSTEM_OVERLAY;
+        ;
+
         params.flags = LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | LayoutParams.FLAG_NOT_FOCUSABLE;
 
@@ -49,23 +53,27 @@ public class MarqueeToast {
     }
 
     public void show() {
-        if (mView != null) {
-            final int gravity = mGravity;
-            mParams.gravity = gravity;
-            if ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.FILL_HORIZONTAL) {
-                mParams.horizontalWeight = 0.0f;
+        try {
+            if (mView != null) {
+                final int gravity = mGravity;
+                mParams.gravity = gravity;
+                if ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.FILL_HORIZONTAL) {
+                    mParams.horizontalWeight = 0.0f;
+                }
+                if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.FILL_VERTICAL) {
+                    mParams.verticalWeight = 0.0f;
+                }
+                mParams.x = mX;
+                mParams.y = mY;
+                mParams.verticalMargin = mVerticalMargin;
+                mParams.horizontalMargin = mHorizontalMargin;
+                if (mView.getParent() != null) {
+                    mWindowManager.removeView(mView);
+                }
+                mWindowManager.addView(mView, mParams);
             }
-            if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.FILL_VERTICAL) {
-                mParams.verticalWeight = 0.0f;
-            }
-            mParams.x = mX;
-            mParams.y = mY;
-            mParams.verticalMargin = mVerticalMargin;
-            mParams.horizontalMargin = mHorizontalMargin;
-            if (mView.getParent() != null) {
-                mWindowManager.removeView(mView);
-            }
-            mWindowManager.addView(mView, mParams);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -7,8 +7,14 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -24,18 +30,37 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
 
+import xiaoxi.tv.R;
 import xiaoxi.tv.WelcomeActivity;
 import xiaoxi.tv.bean.AJson;
 import xiaoxi.tv.bean.Auth;
+import xiaoxi.tv.bean.LogoBg;
+import xiaoxi.tv.bean.WelcomeAd;
 import xiaoxi.tv.service.CTService;
 import xiaoxi.tv.service.TVService;
 import xiaoxi.tv.tools.Ap;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class App extends Application {
+    // 縮放比率
+    public static final float SCALE_RATE = 1.25f;
     public static final String SLEEP_BUTTON = "com.mstar.android.intent.action.SLEEP_BUTTON";
     public static final String STANDBY_DIALOG = "com.ada.android.intent.action.STANDBY_DIALOG";
     public static final String CONTROL_BACKLIGHT = "com.ada.android.intent.action.CONTROL_BACKLIGHT";
+    public static final String SHOWNAME = "SHOWNAME";
+    public static final String HIDENAME = "HIDENAME";
+    public static final String PALY = "PALY";
+    public static final String PAUSE = "PAUSE";
+    public static final String STOP = "STOP";
+    public static final String FORWARD = "FORWARD";
+    public static final String REWIND = "REWIND";
+    public static final String Cancle = "Cancle";
 
     private static final String tag = "App";
     public static Gson gson;
@@ -53,13 +78,19 @@ public class App extends Application {
 
         startService(new Intent(this, TVService.class));
         startService(new Intent(this, CTService.class));
-//        startap();
+
+//        hookWebView();
     }
 
+    public static int createRn() {
+        int r = (int) (Math.random() * 60 + 60);
+        Log.e(tag, "random:" + r);
+        return r * 1000;
+    }
 
     public static String version;
 
-    public  void version() {
+    public void version() {
         try {
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             String url = App.requrl("setUpgrade", "&version=" + version);
@@ -72,7 +103,7 @@ public class App extends Application {
                     if (200 == data.getCode() || 0 == data.getCode()) {
                         Log.e(tag, "上报版本成功: " + version);
                     } else {
-                        Log.e(tag, "上报版本失败!" );
+                        Log.e(tag, "上报版本失败!");
                     }
                 }
             }, null);
@@ -87,18 +118,25 @@ public class App extends Application {
         }
     }
 
+
     private void startap() {
-        ap = new Ap(this);
-        boolean aps = ap.setWifiApEnabled(true);
-        Log.e(tag, aps + "");
+        try {
+            ap = new Ap(this);
+            boolean aps = ap.setWifiApEnabled(true);
+            Log.e(tag, "热点状态：" + aps);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //    http://182.61.11.174:8080/tv/
     public static String headurl = "http://182.61.11.174:8080/tv/remote/";
     public static String socketurl = "http://182.61.11.174:8000/tv";
 
+    //public static String socketurl = "http://192.168.2.12:8000/tv";
     public static String requrl(String api, String parm) {
         String url = headurl + api + "?mac=" + App.mac + parm;
+
         return url;
     }
 
@@ -114,9 +152,9 @@ public class App extends Application {
         }
     }
 
-//    public static String mac = "zhu";
+    public static String mac = "xiaoxitv";
 
-    public static String mac = "00:15:18:17:84:8f";
+//    public static String mac = "00:15:18:17:84:8f";
 
     private void mac() {
         try {
@@ -127,9 +165,9 @@ public class App extends Application {
             BufferedReader bReader = new BufferedReader(inReader);
             String line = null;
             while ((line = bReader.readLine()) != null) {
-//                mac = line.trim().replace(":", "").toLowerCase();
+                mac = line.trim().replace(":", "").toLowerCase();
             }
-            System.out.println("---mac---\n" + mac);
+            Log.e(tag, "---mac---\n" + mac);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,5 +197,73 @@ public class App extends Application {
     }
 
     Bitmap test;
+
+    public boolean isMsg() {
+        return msg;
+    }
+
+    public void setMsg(boolean msg) {
+        this.msg = msg;
+    }
+
+    private boolean msg;
+    private LogoBg logoBg;
+
+    public LogoBg getLogoBg() {
+        return logoBg;
+    }
+
+    public void setLogoBg(LogoBg logoBg) {
+        this.logoBg = logoBg;
+    }
+
+    private void hookWebView() {
+        Class<?> factoryClass = null;
+        try {
+            factoryClass = Class.forName("android.webkit.WebViewFactory");
+            Method getProviderClassMethod = null;
+            Object sProviderInstance = null;
+
+            if (Build.VERSION.SDK_INT == 23) {
+                getProviderClassMethod = factoryClass.getDeclaredMethod("getProviderClass");
+                getProviderClassMethod.setAccessible(true);
+                Class<?> providerClass = (Class<?>) getProviderClassMethod.invoke(factoryClass);
+                Class<?> delegateClass = Class.forName("android.webkit.WebViewDelegate");
+                Constructor<?> constructor = providerClass.getConstructor(delegateClass);
+                if (constructor != null) {
+                    constructor.setAccessible(true);
+                    Constructor<?> constructor2 = delegateClass.getDeclaredConstructor();
+                    constructor2.setAccessible(true);
+                    sProviderInstance = constructor.newInstance(constructor2.newInstance());
+                }
+            } else if (Build.VERSION.SDK_INT == 22) {
+                getProviderClassMethod = factoryClass.getDeclaredMethod("getFactoryClass");
+                getProviderClassMethod.setAccessible(true);
+                Class<?> providerClass = (Class<?>) getProviderClassMethod.invoke(factoryClass);
+                Class<?> delegateClass = Class.forName("android.webkit.WebViewDelegate");
+                Constructor<?> constructor = providerClass.getConstructor(delegateClass);
+                if (constructor != null) {
+                    constructor.setAccessible(true);
+                    Constructor<?> constructor2 = delegateClass.getDeclaredConstructor();
+                    constructor2.setAccessible(true);
+                    sProviderInstance = constructor.newInstance(constructor2.newInstance());
+                }
+            } else if (Build.VERSION.SDK_INT == 21) {// Android 21无WebView安全限制
+                getProviderClassMethod = factoryClass.getDeclaredMethod("getFactoryClass");
+                getProviderClassMethod.setAccessible(true);
+                Class<?> providerClass = (Class<?>) getProviderClassMethod.invoke(factoryClass);
+                sProviderInstance = providerClass.newInstance();
+            }
+            if (sProviderInstance != null) {
+                Field field = factoryClass.getDeclaredField("sProviderInstance");
+                field.setAccessible(true);
+                field.set("sProviderInstance", sProviderInstance);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
