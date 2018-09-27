@@ -50,9 +50,11 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class App extends Application {
     // 縮放比率
     public static final float SCALE_RATE = 1.25f;
-    public static final String SLEEP_BUTTON = "com.mstar.android.intent.action.SLEEP_BUTTON";
-    public static final String STANDBY_DIALOG = "com.ada.android.intent.action.STANDBY_DIALOG";
-    public static final String CONTROL_BACKLIGHT = "com.ada.android.intent.action.CONTROL_BACKLIGHT";
+    public static final String SLEEP_BUTTON = "com.mstar.android.intent.action.SLEEP_BUTTON";//休眠
+    public static final String STANDBY_DIALOG = "com.ada.android.intent.action.STANDBY_DIALOG";//唤醒
+    public static final String CONTROL_BACKLIGHT = "com.ada.android.intent.action.CONTROL_BACKLIGHT";//背光
+    public static final String STANDBY = "com.ada.android.intent.action.STANDBY";//待机
+
     public static final String SHOWNAME = "SHOWNAME";
     public static final String HIDENAME = "HIDENAME";
     public static final String PALY = "PALY";
@@ -130,8 +132,8 @@ public class App extends Application {
     }
 
     //    http://182.61.11.174:8080/tv/
-    public static String headurl = "http://182.61.11.174:8080/tv/remote/";
-    public static String socketurl = "http://182.61.11.174:8000/tv";
+    public static String headurl = "http://www.gdxpc.top:8888/tv/remote/";
+    public static String socketurl = "http://www.gdxpc.top:8000/tv";
 
     //public static String socketurl = "http://192.168.2.12:8000/tv";
     public static String requrl(String api, String parm) {

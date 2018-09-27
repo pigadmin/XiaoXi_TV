@@ -11,4 +11,17 @@
         <attr name="bgcolor" format="color"/>
         <attr name="hasAnim" format="boolean"/>
     </declare-styleable>
+
+
+    <attr name="scrollMode" >
+        <enum name="normalScroll" value="0"/>
+        <enum name="followScroll" value="1"/>
+    </attr>
+
+    <declare-styleable name="TvRecyclerView">
+        <attr name="scrollMode"/>
+        <attr name="focusDrawable" format="reference" />
+        <attr name="isAutoProcessFocus" format="boolean" />
+        <attr name="focusScale" format="float" />
+    </declare-styleable>
 </resources>

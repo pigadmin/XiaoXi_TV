@@ -1,9 +1,6 @@
 package xiaoxi.tv.ui.ad;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -18,28 +15,22 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import xiaoxi.tv.BaseActivity;
 import xiaoxi.tv.R;
-import xiaoxi.tv.WelcomeActivity;
 import xiaoxi.tv.app.App;
 import xiaoxi.tv.bean.WelcomeAd;
 import xiaoxi.tv.tools.FULL;
-import xiaoxi.tv.ui.ad.bean.Command;
-import xiaoxi.tv.ui.ad.bean.Play;
 
-public class SleepActivity extends BaseActivity implements MediaPlayer.OnPreparedListener,
+public class SleepActivity2 extends BaseActivity implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
-    private String tag = "SleepActivity";
+    private String tag = "SleepActivity2";
 
     private int currentad;
     private WelcomeAd ad;
@@ -52,7 +43,9 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
             switch (msg.what) {
                 case UPDATEAD:
                     if (currentad < welcomeAds.size()) {
+
                         ad = welcomeAds.get(currentad);
+                        currentad++;
                         switch (ad.getType()) {
                             case 1:
                                 playimg();
@@ -82,15 +75,17 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
                                         default:
                                             break;
                                     }
+
                                 } catch (Exception e) {
                                     playweb();
                                 }
                                 break;
 
                         }
-                        handler.sendEmptyMessageDelayed(UPDATEAD, ad.getInter() * 1000);
-                        currentad++;
+                    } else {
+                        currentad = 0;
                     }
+                    handler.sendEmptyMessageDelayed(UPDATEAD, ad.getInter() * 1000);
                     break;
             }
         }
@@ -122,28 +117,6 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
                 for (WelcomeAd ad : welcomeAds) {
                     playtime += ad.getInter();
                 }
-                CountDownTimer countDownTimer = new CountDownTimer(playtime * 1000, 1000) {
-                    @Override
-                    public void onTick(long t) {
-                        ad_time.setText(t / 1000 + "");
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                        String type = getIntent().getStringExtra("type");
-                        Log.e(tag, type);
-                        if (App.SLEEP_BUTTON.equals(type)) {
-                            sendBroadcast(new Intent(App.CONTROL_BACKLIGHT).putExtra("BLStatus", "off"));
-                        } else if (App.STANDBY.equals(type)) {
-                            Log.e(tag, "即将关机");
-                            sendBroadcast(new Intent(App.STANDBY));
-                            sendBroadcast(new Intent(App.STANDBY));
-                        }
-                        cancel();
-                        finish();
-                    }
-                }.start();
                 handler.sendEmptyMessage(UPDATEAD);
             }
         } catch (Exception e) {
@@ -156,13 +129,12 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
         ad_image.setVisibility(View.GONE);
         ad_video.setVisibility(View.GONE);
         ad_web.setVisibility(View.GONE);
-
     }
 
     private void playimg() {
         ad_image.setVisibility(View.VISIBLE);
         Log.e(tag + " playimg()", ad.getFilePath());
-        Picasso.with(SleepActivity.this).load(ad.getFilePath()).into(ad_image);
+        Picasso.with(SleepActivity2.this).load(ad.getFilePath()).into(ad_image);
     }
 
     private void playvideo() {
@@ -175,6 +147,16 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
         ad_web.setVisibility(View.VISIBLE);
         Log.e(tag + " playweb()", ad.getFilePath());
         ad_web.loadUrl(ad.getFilePath());
+        ad_web.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                    finish();
+                }
+
+                return false;
+            }
+        });
     }
 
     private void playmusic() {
@@ -182,7 +164,7 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
             mediaPlayer.stop();
             mediaPlayer.reset();
             Log.e(tag + " playmusic()", ad.getBgFile());
-            mediaPlayer.setDataSource(SleepActivity.this,
+            mediaPlayer.setDataSource(SleepActivity2.this,
                     Uri.parse(ad.getBgFile()));
             mediaPlayer.prepareAsync();
         } catch (Exception e) {
@@ -220,7 +202,9 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
 
 
         ad_time = findViewById(R.id.ad_time);
+        ad_time.setVisibility(View.GONE);
         ad_tips = findViewById(R.id.ad_tips);
+        ad_tips.setVisibility(View.GONE);
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
@@ -252,13 +236,10 @@ public class SleepActivity extends BaseActivity implements MediaPlayer.OnPrepare
         mp.start();
     }
 
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        finish();
         return true;
     }
 

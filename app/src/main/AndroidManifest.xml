@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="xiaoxi.tv">
     <!--   android:sharedUserId="android.uid.system"-->
 
@@ -14,7 +13,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
 
     <application
         android:name=".app.App"
@@ -47,6 +45,12 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.ad.SleepActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.ad.SleepActivity2"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.ad.MainAd"
             android:launchMode="singleTask" />
 
         <service android:name=".service.TVService" />

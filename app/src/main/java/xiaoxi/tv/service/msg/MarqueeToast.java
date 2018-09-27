@@ -33,7 +33,7 @@ public class MarqueeToast {
 ////                | LayoutParams.TYPE_SYSTEM_OVERLAY;
 
         params.type = LayoutParams.TYPE_SYSTEM_ALERT | LayoutParams.TYPE_SYSTEM_OVERLAY;
-        ;
+
 
         params.flags = LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | LayoutParams.FLAG_NOT_FOCUSABLE;

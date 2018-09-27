@@ -89,7 +89,7 @@ public class AdapterMetroView extends RelativeLayout {
             a.recycle();
         }
         if (mDrawable == null) {
-            mDrawable = getResources().getDrawable(R.drawable.shadow);
+//            mDrawable = getResources().getDrawable(R.drawable.shadow);
         }
         setChildrenDrawingOrderEnabled(true);
     }

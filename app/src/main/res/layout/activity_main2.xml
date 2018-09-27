@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <xiaoxi.tv.ui.head.Head
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></xiaoxi.tv.ui.head.Head>
+
+    <!--android:paddingBottom="93dp"-->
+    <!--android:paddingLeft="127dp"-->
+    <!--android:paddingTop="140dp"-->
+    <!---->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"></RelativeLayout>-->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="93dp"
+            android:layout_marginLeft="127dp"
+            android:layout_marginTop="140dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <xiaoxi.tv.ui.diy.ScaleRecyclerView
+                android:id="@+id/mainrecyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:focusableInTouchMode="false"></xiaoxi.tv.ui.diy.ScaleRecyclerView>
+
+
+            <xiaoxi.tv.ui.diy.ScaleRecyclerView
+                android:id="@+id/mainrecyle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/mainrecyle"
+                android:focusable="false"
+                android:focusableInTouchMode="false"></xiaoxi.tv.ui.diy.ScaleRecyclerView>
+
+
+        </RelativeLayout>
+
+    </HorizontalScrollView>
+
+    <!--<HorizontalScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:clipChildren="false"-->
+    <!--android:clipToPadding="false">-->
+
+    <LinearLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_100"
+        android:paddingTop="@dimen/dp_140">
+
+        <xiaoxi.tv.ui.diy.HorizontalRecyclerView
+            android:id="@+id/horizontalRecyclerView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+
+        <xiaoxi.tv.ui.diy.HorizontalRecyclerView
+            android:id="@+id/horizontalRecyclerView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+
+    </LinearLayout>
+    <!--</HorizontalScrollView>-->
+
+
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitXY" />
+
+    <WebView
+        android:id="@+id/msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:visibility="gone"></WebView>
+
+</RelativeLayout>

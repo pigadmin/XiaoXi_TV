@@ -110,8 +110,6 @@ public class TVService extends Service implements Runnable, IScrollState {
     }
 
 
-
-
 //    com.mstar.android.intent.action.SLEEP_BUTTON 睡眠键
 //    com.ada.android.intent.action.STANDBY_DIALOG 待机键
 //    com.ada.android.intent.action.CONTROL_BACKLIGHT  intent.putExtra("BLStatus","off");关背光 	 intent.putExtra("BLStatus","on");开背光
@@ -120,19 +118,31 @@ public class TVService extends Service implements Runnable, IScrollState {
         IntentFilter filter = new IntentFilter();
         filter.addAction(App.SLEEP_BUTTON);
         filter.addAction(App.STANDBY_DIALOG);
+        filter.addAction(App.STANDBY);
         filter.addAction(Intent.ACTION_TIME_TICK);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
+
         registerReceiver(receiver, filter);
     }
 
+    boolean issleep;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (App.SLEEP_BUTTON.equals(intent.getAction())) {
-                    sleep();
+                if (App.STANDBY.equals(intent.getAction())) {//待机
+//                    Log.e(tag, "关机关机关机");
+//                    sendBroadcast(new Intent(App.STANDBY));
+                } else if (App.SLEEP_BUTTON.equals(intent.getAction())) {
+                    if (!issleep) {
+                        sleep();//休眠
+                    } else {
+                        standby();//唤醒
+                    }
+                    issleep = !issleep;
                 } else if (App.STANDBY_DIALOG.equals(intent.getAction())) {
-                    standby();
+//                    sendBroadcast(new Intent(App.STANDBY));
+                    off();//关机
                 } else if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
                     handler.sendEmptyMessage(UPDATEAD);
                 }
@@ -203,6 +213,8 @@ public class TVService extends Service implements Runnable, IScrollState {
     }
 
     private void standby() {//唤醒
+        sendBroadcast(new Intent(App.CONTROL_BACKLIGHT).putExtra("BLStatus", "on"));
+        Log.e(tag, "唤醒唤醒唤醒");
         String url = App.requrl("getWelComeAd", "&adType=2");
         Log.e(tag, url);
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -225,12 +237,59 @@ public class TVService extends Service implements Runnable, IScrollState {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                        } else {
-                            sendBroadcast(new Intent(App.CONTROL_BACKLIGHT).putExtra("BLStatus", "on"));
                         }
                     }
                 } catch (Exception e) {
-                    sendBroadcast(new Intent(App.CONTROL_BACKLIGHT).putExtra("BLStatus", "on"));
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(TVService.this, "error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                5 * 1000,//链接超时时间
+                0,//重新尝试连接次数
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+        App.queue.add(request);
+
+    }
+
+    private void off() {//关机
+        Log.e(tag, "关机关机关机");
+        String url = App.requrl("getWelComeAd", "&adType=3");
+        Log.e(tag, url);
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String json) {
+                try {
+                    Log.e(tag, json);
+                    AJson<List<WelcomeAd>> data = App.gson.fromJson(
+                            json, new TypeToken<AJson<List<WelcomeAd>>>() {
+                            }.getType());
+                    if (200 == data.getCode() || 0 == data.getCode()) {
+                        if (!data.getData().isEmpty()) {
+                            Log.e(tag, "关机关机关机" + data.getData().size());
+                            sendBroadcast(new Intent(App.STOP));
+                            Bundle bundle = new Bundle();
+                            bundle.putString("type", App.STANDBY);
+                            bundle.putSerializable("key", (Serializable) data.getData());
+                            Intent intent = new Intent(getApplicationContext(),
+                                    SleepActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else {
+                            sendBroadcast(new Intent(App.STANDBY));
+                        }
+                    }
+                } catch (Exception e) {
+                    sendBroadcast(new Intent(App.STANDBY));
                     e.printStackTrace();
                 }
 
@@ -252,6 +311,7 @@ public class TVService extends Service implements Runnable, IScrollState {
     }
 
     private void sleep() {//休眠
+        Log.e(tag, "休眠休眠休眠休眠");
         String url = App.requrl("getWelComeAd", "&adType=3");
         Log.e(tag, url);
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -342,6 +402,7 @@ public class TVService extends Service implements Runnable, IScrollState {
                         Log.e(tag + "in_play" + "---" + cmmond.getCommand(), json);
                         switch (cmmond.getCommand()) {
                             case 1:
+
                                 sendBroadcast(new Intent(App.STOP));
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("key", cmmond);
@@ -350,6 +411,7 @@ public class TVService extends Service implements Runnable, IScrollState {
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
+                                sendBroadcast(new Intent(App.PALY).putExtras(bundle));
                                 break;
                             case 2:
                                 sendBroadcast(new Intent(App.FORWARD));

@@ -12,6 +12,7 @@ public class ResType {
         type.put(".jpeg", 1);
         type.put(".jpg", 1);
         type.put(".png", 1);
+        type.put(".gif", 1);
         // 2 audio
         type.put(".mp3", 2);
         type.put(".wav", 2);

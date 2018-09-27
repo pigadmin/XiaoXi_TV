@@ -90,7 +90,6 @@ public class WelcomeActivity extends BaseActivity implements MediaPlayer.OnError
 //                },
 //                Contants.PermissRequest);
 
-
     }
 
     private void check() {

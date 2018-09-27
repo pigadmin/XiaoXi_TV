@@ -13,6 +13,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -33,10 +36,10 @@ public class BaseActivity extends Activity {
 
 
         try {
-            if (!getClass().getSimpleName().equals("WelcomeActivity")) {
+            if (!getClass().getSimpleName().equals("WelcomeActivity") && !getClass().getSimpleName().equals("SleepActivity2")) {
                 backs = app.getLogoBg().getBacks();
-                handler.sendEmptyMessageDelayed(backsmsg, 500);
-    //            handler.sendEmptyMessage(backsmsg);
+                handler.sendEmptyMessageDelayed(backsmsg, 600);
+                //            handler.sendEmptyMessage(backsmsg);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,25 +57,32 @@ public class BaseActivity extends Activity {
             switch (msg.what) {
                 case backsmsg:
                     try {
-                        Log.e(tag, backs.get(cutbg).getPath());
+//                        Picasso.with(BaseActivity.this).load(backs.get(cutbg).getPath()).into(new Target() {
+//                            @Override
+//                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+//                                getWindow().getDecorView().setBackground(
+//                                        new BitmapDrawable(bitmap));
+//                            }
+//
+//                            @Override
+//                            public void onBitmapFailed(Drawable drawable) {
+//                            }
+//
+//                            @Override
+//                            public void onPrepareLoad(Drawable drawable) {
+//                            }
+//                        });
 
-                        Picasso.with(BaseActivity.this).load(backs.get(cutbg).getPath()).into(new Target() {
+                        Glide.with(BaseActivity.this).load(backs.get(cutbg).getPath()).asBitmap().into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                                 getWindow().getDecorView().setBackground(
                                         new BitmapDrawable(bitmap));
                             }
-
-                            @Override
-                            public void onBitmapFailed(Drawable drawable) {
-                            }
-
-                            @Override
-                            public void onPrepareLoad(Drawable drawable) {
-                            }
                         });
-                        if (backs.size() > 1) {
-                            Log.e(tag, "cutbg：" + cutbg + "----s：" + backs.get(cutbg).getInter());
+
+                        if (!backs.isEmpty()) {
+                            Log.e(tag, backs.get(cutbg).getPath() + "cutbg：" + cutbg + "----s：" + backs.get(cutbg).getInter());
                             handler.sendEmptyMessageDelayed(backsmsg, backs.get(cutbg).getInter() * 1000);
                             if (cutbg < backs.size() - 1) {
                                 cutbg++;

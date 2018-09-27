@@ -1,10 +1,16 @@
 <resources>
+    <dimen name="recyclerView_item_space">18dp</dimen>
+    <dimen name="recyclerView_item_radius">7dp</dimen>
+    <dimen name="recyclerview_item_width">225dp</dimen>
+    <dimen name="recyclerview_item_height">110dp</dimen>
+    <dimen name="recyclerView_item_space1">8dp</dimen>
+    <dimen name="recyclerview_item_width1">335dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="image_thumbnail_size">200dp</dimen>
-    
+
     <dimen name="act_app_detail_achievement_textsize">26sp</dimen>
     <!-- 宽，高，间距等 -->
     <dimen name="basic_inspo_constellation_width">231dp</dimen>
@@ -24,7 +30,7 @@
     <dimen name="flag_top_textview_width">105dp</dimen>
     <dimen name="flag_top_textview_height">40dp</dimen>
 
-      <!-- 主界面 单元块 配置 -->
+    <!-- 主界面 单元块 配置 -->
     <dimen name="rl_unit_width">143dp</dimen>
     <dimen name="rl_unit_height">117dp</dimen>
     <dimen name="rl_unit_space">7dp</dimen>

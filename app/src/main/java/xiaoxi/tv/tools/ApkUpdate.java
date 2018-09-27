@@ -43,7 +43,7 @@ public class ApkUpdate {
         this.apkurl = apkurl;
         this.savePath = dir.getAbsolutePath() + "/";
         handler = new Handler();
-        filename = "xxtv.apk";
+        filename = apkurl.split("/")[apkurl.split("/").length - 1];
     }
 
     private ProgressDialog pBar;
@@ -120,8 +120,15 @@ public class ApkUpdate {
                 });
             }
         });
-        downLoadFileThread.start();
+        if (!new File(savePath + filename).exists()) {
+            downLoadFileThread.start();
+        } else {
+            pBar.cancel();
+            install2(savePath + filename);
+        }
+
     }
+
     public void update() {
 
         pBar = new ProgressDialog(context);
@@ -177,31 +184,37 @@ public class ApkUpdate {
         });
         downLoadFileThread.start();
     }
-    public static void install(final String path) {
+
+    public void install(final String path) {
         // TODO Auto-generated method stub
-        System.out.println("install :" + path);
+        try {
+            System.out.println("install :" + path);
 
-        new Thread(new Runnable() {
+            new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                try {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
 
-                    String cmd = "pm install -r " + path;
 
-                    System.out.println(cmd);
+                    try {
+                        String cmd = "pm install -r " + path;
 
-                    Process process = Runtime.getRuntime().exec(cmd);
-                    // process.wait();
+                        System.out.println(cmd);
 
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
+                        Process process = Runtime.getRuntime().exec(cmd);
+                        // process.wait();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
-
-            }
-        }).start();
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            install2(savePath + filename);
+        }
 
     }
 
